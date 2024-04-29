@@ -1,5 +1,7 @@
 package com.riwi.vacancies.services;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -7,10 +9,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.riwi.vacancies.entities.Company;
+import com.riwi.vacancies.entities.Vacancy;
 import com.riwi.vacancies.repositories.CompanyRepository;
 import com.riwi.vacancies.services.interfaces.ICompanyService;
 import com.riwi.vacancies.utils.dto.request.CompanyRequest;
 import com.riwi.vacancies.utils.dto.response.CompanyResponse;
+import com.riwi.vacancies.utils.dto.response.VacancyToCompanyResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -30,6 +34,7 @@ public class CompanyService implements ICompanyService{
     PageRequest pagination = PageRequest.of(page, size);
     /**2. llamamos el repositorio */
     //return this.companyRepository.findAll(pagination).map(company -> this.entityToResponse(company));
+    //Con expresión landa
     return this.companyRepository.findAll(pagination).map(this::entityToResponse);
   }
 
@@ -66,8 +71,24 @@ public class CompanyService implements ICompanyService{
     //convierto todos los atributos de la entidad y se los paso a la respuesta
     //para no convertir manual(hacer los get) utilizo beanUtils para convertir la entidad a una respuesta
 
-    /*Bean utils nos permite hacer una copia de una clase en otra, en este caso toda la entidad de tipo company será copiada con la información requerida por la variable tipo CompanyResponse */
+    /**Bean utils nos permite hacer una copia de una clase en otra, en este caso toda la entidad de tipo company será copiada con la información requerida por la variable tipo CompanyResponse */
     BeanUtils.copyProperties(entity, response);
+
+    /**
+     * stream -> Convierte la lista en colección para poder iterarse
+     * map -> Itera toda la lsita y retorna cambios
+     * collect -> Crea de nuevo toda la lista que se habia transformado en colección
+     */
+
+    response.setVacancies(entity.getVacancies().stream().map(vacancy -> this.vacancyToResponse(vacancy)).collect(Collectors.toList()));
+    return response;
+  }
+
+  private VacancyToCompanyResponse vacancyToResponse (Vacancy entity){
+    VacancyToCompanyResponse response = new VacancyToCompanyResponse();
+
+    BeanUtils.copyProperties(entity, response);
+
     return response;
   }
 
