@@ -1,5 +1,6 @@
 package com.riwi.vacancies.services;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -40,8 +41,16 @@ public class CompanyService implements ICompanyService{
 
   @Override
   public CompanyResponse create(CompanyRequest request) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'create'");
+    //creo primero un metodo para convertir requestToEntity para que lo pueda recibir el método
+    /**Convertirmos el request en la entidad */
+
+    Company company = this.requestToEntity(request, new Company());
+    //debo de convertir de nuevo usando el método entity to response
+    /**Agregamos la entidad en el repositorio y el retorno lo conveertimos en respuesta */
+    return this.entityToResponse(this.companyRepository.save(company));
+
+
+
   }
 
   @Override
@@ -58,8 +67,12 @@ public class CompanyService implements ICompanyService{
 
   @Override
   public CompanyResponse getById(String id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getById'");
+
+    //Buscamos la compañia con el id
+    Company company = this.find(id);
+
+    //Convertimos la entidad al dto de respuesta y lo retornamos
+    return this.entityToResponse(company);
   }
 
   /**
@@ -90,6 +103,20 @@ public class CompanyService implements ICompanyService{
     BeanUtils.copyProperties(entity, response);
 
     return response;
+  }
+
+  private Company requestToEntity(CompanyRequest entity, Company company){
+    company.setContact(entity.getContact());
+    company.setLocation(entity.getLocation());
+    company.setName(entity.getName());
+    company.setVacancies(new ArrayList<>());
+    return company;
+
+  }
+
+  //para el findById
+  private Company find(String id){
+    return this.companyRepository.findById(id).orElseThrow();
   }
 
 }
