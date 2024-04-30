@@ -3,6 +3,7 @@ package com.riwi.vacancies.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,7 @@ public class CompanyController {
 
   @PostMapping
   public ResponseEntity<CompanyResponse> insert (
-    @RequestBody CompanyRequest company){
+    @Validated @RequestBody CompanyRequest company){
       return ResponseEntity.ok(this.iCompanyService.create(company));
     }
 
@@ -57,7 +58,7 @@ public class CompanyController {
   
   @PutMapping(path = "/{id}")
   public ResponseEntity<CompanyResponse> update(
-    @PathVariable String id,
+    @Validated @PathVariable String id,
     @RequestBody CompanyRequest company){
       return ResponseEntity.ok(this.iCompanyService.update(company, id));
     }
