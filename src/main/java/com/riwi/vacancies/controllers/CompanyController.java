@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,5 +47,20 @@ public class CompanyController {
     @PathVariable String id ){
       return ResponseEntity.ok(this.iCompanyService.getById(id));
     }
+
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<Void> delete(
+    @PathVariable String id){
+      this.iCompanyService.delete(id);
+      return ResponseEntity.noContent().build();
+    }
+  
+  @PutMapping(path = "/{id}")
+  public ResponseEntity<CompanyResponse> update(
+    @PathVariable String id,
+    @RequestBody CompanyRequest company){
+      return ResponseEntity.ok(this.iCompanyService.update(company, id));
+    }
+  
   
 }
