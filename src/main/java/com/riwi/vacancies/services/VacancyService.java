@@ -17,6 +17,7 @@ import com.riwi.vacancies.utils.dto.request.VacancyRequest;
 import com.riwi.vacancies.utils.dto.response.CompanyToVacancyResponse;
 import com.riwi.vacancies.utils.dto.response.VacancyResponse;
 import com.riwi.vacancies.utils.enums.StatusVacancy;
+import com.riwi.vacancies.utils.exceptions.IdNotFoundExeption;
 
 import lombok.AllArgsConstructor;
 
