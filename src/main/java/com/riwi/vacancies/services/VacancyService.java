@@ -53,8 +53,20 @@ public class VacancyService implements IVacanciesService{
 
   @Override
   public VacancyResponse update(VacancyRequest request, Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'update'");
+    //Buscamos la vacante
+    Vacancy vacancy = this.find(id);
+
+    //validamos la compañia
+    Company company = this.companyRepository.findById(request.getCompanyId()).orElseThrow(() -> new IdNotFoundExeption("company"));
+
+    //conertimos el dto de request
+    vacancy = this.requestToVacancy(request, vacancy);
+    //Agregamos la vacante
+    vacancy.setCompany(company);
+    //Agregamos el nuevo Status
+    vacancy.setStatus(request.getStatus());
+
+    return this.entityToResponse(this.vacancyRepository.save(vacancy));
   }
 
   @Override
