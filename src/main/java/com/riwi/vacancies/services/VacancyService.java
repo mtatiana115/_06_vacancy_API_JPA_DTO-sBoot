@@ -59,14 +59,13 @@ public class VacancyService implements IVacanciesService{
 
   @Override
   public void delete(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    Vacancy vacancy = this.find(id);
+    this.vacancyRepository.delete(vacancy);
   }
 
   @Override
   public VacancyResponse getById(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getById'");
+    return this.entityToResponse(this.find(id));
   }
 
   private VacancyResponse entityToResponse(Vacancy entity){
@@ -96,5 +95,10 @@ public class VacancyService implements IVacanciesService{
     entity.setStatus(StatusVacancy.ACTIVE);
 
     return entity;
+  }
+
+  private Vacancy find(Long id){
+    return this.vacancyRepository.findById(id)
+    .orElseThrow(() -> new IdNotFoundExeption("Vacancy"));
   }
 }
